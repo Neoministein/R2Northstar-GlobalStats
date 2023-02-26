@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  r2-gs-endpoint:
+    build:
+      context: ../../..
+      dockerfile: install/docker/Dockerfile
+    ports:
+    - "8100:8100"
+    env_file:
+    - container.env
+    volumes:
+      - r2-gs-endpoint-log:/usr/share/r2gs/endpoint/log
+    networks:
+      - esnet
+networks:
+  esnet:
+    external: true
+volumes:
+  r2-gs-endpoint-log:
+    external: true

@@ -1,0 +1,7 @@
+elastic:
+    nodes:
+        - ${org.elastic.node.0}
+    prefix: r2gs
+    enabled: ${org.elastic.enabled}
+server:
+    port: 8100

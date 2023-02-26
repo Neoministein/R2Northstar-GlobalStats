@@ -1,0 +1,16 @@
+{
+	"Name" : "Interstellar.GlobalStats",
+	"Description" : "",
+    "Version": "1.0.0",
+	"LoadPriority": 0,
+
+	"Scripts": [
+		{
+			"Path": "_PlayerScore.gnut",
+			"RunOn": "SERVER && MP",
+			"ServerCallback": {
+				"Before": "PlayerScore_Init"
+			}
+		}
+	]
+}

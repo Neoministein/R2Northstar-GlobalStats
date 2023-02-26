@@ -1,0 +1,1 @@
+java lib/ElasticLogic.java -DELASTIC_URL=http://localhost:9200

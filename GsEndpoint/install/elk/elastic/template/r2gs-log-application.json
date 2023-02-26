@@ -1,0 +1,42 @@
+{
+  "version": 3,
+  "index_patterns": [
+    "r2gs-log-application-*"
+  ],
+  "aliases": {
+    "r2tgs-log-application": {}
+  },
+  "settings": {
+    "number_of_shards": "1",
+    "auto_expand_replicas": "0-1"
+  },
+  "mappings" : {
+    "properties" : {
+      "@timestamp" : {
+        "type" : "date"
+      },
+      "class" : {
+        "type" : "keyword"
+      },
+      "level" : {
+        "type" : "keyword"
+      },
+      "text" : {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "requestId" : {
+        "type" : "keyword"
+      },
+      "timestamp" : {
+        "type" : "date",
+        "format": "yyyy-MM-dd HH:mm:ss"
+      }
+    }
+  }
+}

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.helidon.applications</groupId>
+        <artifactId>helidon-mp</artifactId>
+        <version>3.1.2</version>
+    </parent>
+
+    <groupId>com.neo.r2</groupId>
+    <artifactId>global-stats-endpoint</artifactId>
+    <name>R2 Global Stats Endpoint</name>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <mainClass>io.helidon.microprofile.cdi.Main</mainClass>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <org.jboss.jandex.version>2.1.1.Final</org.jboss.jandex.version>
+        <helidon.version>3.1.2</helidon.version>
+        <neoutil.version>1.0.0</neoutil.version>
+        <mockito.core.version>4.8.0</mockito.core.version>
+    </properties>
+
+    <dependencies>
+        <!-- NeoUtil -->
+        <dependency>
+            <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-framework</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-elastic</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-startup</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-helidon-rest</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-helidon-config</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
+        <!-- Bean Discovery -->
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jandex</artifactId>
+            <version>2.4.3.Final</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Helidon -->
+        <dependency>
+            <groupId>io.helidon.microprofile.bundles</groupId>
+            <artifactId>helidon-microprofile-core</artifactId>
+            <version>${helidon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.helidon.logging</groupId>
+            <artifactId>helidon-logging-slf4j</artifactId>
+            <version>${helidon.version}</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.19.0</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>io.helidon.microprofile.tests</groupId>
+            <artifactId>helidon-microprofile-tests-junit5</artifactId>
+            <version>${helidon.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.core.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--enable-preview</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-libs</id>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.neo.util</groupId>
+                <artifactId>neoutil-rest-plugin</artifactId>
+                <version>${neoutil.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-inboundDto</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jboss.jandex</groupId>
+                <artifactId>jandex-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-index</id>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

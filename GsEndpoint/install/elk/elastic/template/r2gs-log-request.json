@@ -1,0 +1,65 @@
+{
+"version": 3,
+  "index_patterns": [
+    "r2gs-log-request-*"
+  ],
+  "aliases": {
+    "r2gs-log-request": {}
+  },
+  "settings": {
+    "number_of_shards": "1",
+    "auto_expand_replicas": "0-1",
+    "index.default_pipeline": "r2gs-log-request-geoip.json"
+  },
+  "mappings": {
+    "properties": {
+      "agent": {
+        "type": "keyword"
+      },
+      "context": {
+        "type": "keyword"
+      },
+      "error": {
+        "type": "keyword"
+      },
+      "owner": {
+        "type": "keyword"
+      },
+      "processTime": {
+        "type": "integer"
+      },
+      "remoteAddress": {
+        "type": "ip"
+      },
+      "requestId": {
+        "type": "keyword"
+      },
+      "status": {
+        "type": "keyword"
+      },
+      "timestamp": {
+        "type": "date",
+        "format": "epoch_millis"
+      },
+      "geolocation": {
+        "properties": {
+          "continent_name": {
+            "type": "keyword"
+          },
+          "country_iso_code": {
+            "type": "keyword"
+          },
+          "city_name": {
+            "type": "keyword"
+          },
+          "region_iso_code": {
+            "type": "keyword"
+          },
+          "location": {
+            "type": "geo_point"
+          }
+        }
+      }
+    }
+  }
+}
