@@ -44,41 +44,29 @@ const BackendService = {
 
     playerCache: new Map<string, CachedPlayerLookup>(),
 
-    resolvePlayerName<T extends PlayerBucket>(promiseToResolve : Promise<T[]>) : Promise<T[]> {
-        return promiseToResolve.then(data => {
-            const promises = data.map(item => {
-                return this.getPlayerNameFromUid(item.key).then(data => {
-                    item.playerName = data.playerName;
-                    return item;
-                });
-              });
-            return Promise.all(promises);
-        });
-    },
-
     getTopPlayerKills() : Promise<PlayerKillBucket[]> {
-        return fetch(AppConfig.apiUrl + "/result/top/player-kills?max=10000").then(response => response.json())
+        return fetch(AppConfig.apiUrl + "/result/top/player-kills?max=1000").then(response => response.json())
         .then(data => data.buckets);
     },
 
     getTopPlayerKd() : Promise<PlayerKdBucket[]> {
-        return this.resolvePlayerName(fetch(AppConfig.apiUrl + "/result/top/player-kd/").then(response => response.json())
-        .then(data => data.buckets));
+        return fetch(AppConfig.apiUrl + "/result/top/player-kd?max=1000").then(response => response.json())
+        .then(data => data.buckets);
     },
 
     getTopNpcKills() : Promise<NpcKillBucket[]> {
-        return this.resolvePlayerName(fetch(AppConfig.apiUrl + "/result/top/npc-kills/").then(response => response.json())
-        .then(data => data.buckets));
+        return fetch(AppConfig.apiUrl + "/result/top/npc-kills?max=1000").then(response => response.json())
+        .then(data => data.buckets);
     },
 
     getTopWinRatio() : Promise<WinRatioBucket[]> {
-        return this.resolvePlayerName(fetch(AppConfig.apiUrl + "/result/top/win-ratio/").then(response => response.json())
-        .then(data => data.buckets));
+        return fetch(AppConfig.apiUrl + "/result/top/win-ratio?max=1000").then(response => response.json())
+        .then(data => data.buckets);
     },
 
     getTopWins() : Promise<WinsBucket[]> {
-        return this.resolvePlayerName(fetch(AppConfig.apiUrl + "/result/top/win/").then(response => response.json())
-        .then(data => data.buckets));
+        return fetch(AppConfig.apiUrl + "/result/top/win?max=1000").then(response => response.json())
+        .then(data => data.buckets);
     },
 
     getPlayerNameFromUid(uid : string) : Promise<PlayerLookUp> {
@@ -97,7 +85,6 @@ const BackendService = {
         }
 
         return Promise.resolve(cachedPlayer);
-        
     }
 }
 

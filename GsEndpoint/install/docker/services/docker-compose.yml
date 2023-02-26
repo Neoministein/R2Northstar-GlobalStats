@@ -22,10 +22,8 @@ services:
       - ../services/esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
-    labels:
-      - "co.elastic.logs/enabled: false"
     networks:
-      - esnet
+      - r2-gs
   r2-gs-kibana:
     depends_on:
       - r2-gs-es01
@@ -42,10 +40,8 @@ services:
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
-    labels:
-      - "co.elastic.logs/enabled: false"
     networks:
-      - esnet
+      - r2-gs
 networks:
-  esnet:
+  r2-gs:
     external: true

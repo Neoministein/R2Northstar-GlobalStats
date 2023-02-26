@@ -12,9 +12,9 @@ services:
     volumes:
       - r2-gs-endpoint-log:/usr/share/r2gs/endpoint/log
     networks:
-      - esnet
+      - r2-gs
 networks:
-  esnet:
+  r2-gs:
     external: true
 volumes:
   r2-gs-endpoint-log:

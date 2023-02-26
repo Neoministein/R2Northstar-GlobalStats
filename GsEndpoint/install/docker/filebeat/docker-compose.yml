@@ -15,9 +15,9 @@ services:
     # Disable strict permission checks to override filebeat.yml
     command: filebeat -strict.perms=false
     networks:
-      - esnet
+      - r2-gs
 networks:
-  esnet:
+  r2-gs:
     external: true
 volumes:
   r2-gs-endpoint-log:

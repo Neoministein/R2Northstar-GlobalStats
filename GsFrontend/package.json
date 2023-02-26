@@ -1,6 +1,6 @@
 {
-    "name": "sakai-react",
-    "version": "8.0.1-SNAPSHOT",
+    "name": "GsFrontend",
+    "version": "1.0.0-SNAPSHOT",
     "private": false,
     "scripts": {
         "dev": "next dev",
