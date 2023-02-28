@@ -40,6 +40,7 @@ public class ResultResource {
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON + "; charset=UTF-8")
     public void createMatch(MatchResultDto matchResultDto) {
         if (searchProvider.enabled()) {
             if (matchResultDto.matchId() != null) {
