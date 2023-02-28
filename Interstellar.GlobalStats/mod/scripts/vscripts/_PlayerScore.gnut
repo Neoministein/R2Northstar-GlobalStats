@@ -80,7 +80,8 @@ void function OnGameFinished()
     request.method = HttpRequestMethod.POST
     request.url =  file.hostname + "/api/v1/result"
     request.body = EncodeJSON(data)
-    request.headers["User-Agent"] <- "R2Northstar/" + file.northstarVersion + " Interstellar.GlobalStats/" + file.modVersion
+	request.headers["User-Agent"] <- []
+    request.headers["User-Agent"].append("R2Northstar/" + file.northstarVersion + " Interstellar.GlobalStats/" + file.modVersion)
 
     NSHttpRequest(request, __OnSuccess, __OnFailure)
 }
