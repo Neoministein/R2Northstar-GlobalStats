@@ -18,11 +18,18 @@ const table<int, string> pgTypeToString = {
 }
 
 struct {
-    table < entity , table < int , int > > playerData
+    table < entity , table < int , int > > playerData,
+    string hostname,
+    string northstarVersion,
+    string modVersion,
 } file
 
 void function PlayerScore_Init()
 {
+    file.hostname = GetConVarString( "gs-hostname" )
+    file.northstarVersion = NSGetModVersionByModName("Northstar.Client")
+    file.modVersion = NSGetModVersionByModName("Interstellar.GlobalStats")
+
     AddCallback_GameStateEnter( eGameState.Postmatch, OnGameFinished )
 
     AddCallback_OnClientConnected( OnConnectionEvent )
@@ -36,7 +43,6 @@ void function OnGameFinished()
 {
     int winningTeam = GetWinningTeam();
 	table data
-	//data["matchId"] <- "anId"
     data["map"] <- GetMapName()
     data["gamemode"] <- GameRules_GetGameMode()
 
@@ -61,7 +67,6 @@ void function OnGameFinished()
             {
                 if (player in file.playerData && key in file.playerData[player]) {
                     playerTable[value] <- file.playerData[player][key]
-                    print("3 " + " " + key + file.playerData[player][key]  + " "  + player.GetPlayerName())
                 }
             }
         }
@@ -69,16 +74,13 @@ void function OnGameFinished()
         players.append(playerTable)
     }
 
-    print("3-------")
     PrintTable(data)
 
     HttpRequest request = { ... }
     request.method = HttpRequestMethod.POST
-    request.url = "http://localhost:8090/api/v1/result"
+    request.url =  file.hostname + "/api/v1/result"
     request.body = EncodeJSON(data)
-    //request.headers["hello"] <- "world"
-    //request.queryParameters["uid"] <- GetPlayerArray()[0].GetUID()
-    //request.contentType = "application/json"
+    request.headers["User-Agent"] <- "R2Northstar/" + file.northstarVersion + " Interstellar.GlobalStats/" + file.modVersion
 
     NSHttpRequest(request, __OnSuccess, __OnFailure)
 }
