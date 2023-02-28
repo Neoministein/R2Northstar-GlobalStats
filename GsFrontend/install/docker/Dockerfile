@@ -18,6 +18,7 @@ ADD .editorconfig .
 ADD next.config.js .
 ADD next-env.d.ts .
 ADD tsconfig.json .
+ADD .env.production .
 
 RUN npm run export
 RUN echo "done!"
