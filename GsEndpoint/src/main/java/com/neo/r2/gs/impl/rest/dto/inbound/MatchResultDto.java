@@ -16,6 +16,13 @@ public record MatchResultDto(
         String matchId,
 
         @Size(max = ElasticMappingConstants.KEYWORD)
+        String tags,
+
+        @Size(max = ElasticMappingConstants.KEYWORD)
+        @JsonProperty(required = true)
+        String serverName,
+
+        @Size(max = ElasticMappingConstants.KEYWORD)
         @JsonProperty(required = true)
         String map,
 

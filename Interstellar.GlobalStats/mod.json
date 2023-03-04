@@ -1,9 +1,18 @@
 {
 	"Name" : "Interstellar.GlobalStats",
-	"Description" : "",
-    "Version": "1.0.0",
-	"LoadPriority": 0,
-
+	"Description" : "A global stats system for the R2Northstar client",
+	"Version": "1.0.0",
+	"LoadPriority": 10,
+	"ConVars": [
+		{
+			"Name": "gs-hostname",
+			"DefaultValue": "https://r2gs.neoministein.com"
+		},
+		{
+			"Name": "gs-tags",
+			"DefaultValue": ""
+		}
+	],
 	"Scripts": [
 		{
 			"Path": "_PlayerScore.gnut",

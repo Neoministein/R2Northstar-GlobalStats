@@ -18,6 +18,12 @@
       "matchId": {
         "type": "keyword"
       },
+      "serverName": {
+        "type": "keyword"
+      },
+      "tags": {
+        "type": "keyword"
+      },
       "gamemode": {
         "type": "keyword"
       },

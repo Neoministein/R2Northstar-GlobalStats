@@ -22,6 +22,8 @@ struct {
     string hostname,
     string northstarVersion,
     string modVersion,
+    string serverName,
+    string tags
 } file
 
 void function PlayerScore_Init()
@@ -29,6 +31,8 @@ void function PlayerScore_Init()
     file.hostname = GetConVarString( "gs-hostname" )
     file.northstarVersion = NSGetModVersionByModName("Northstar.Client")
     file.modVersion = NSGetModVersionByModName("Interstellar.GlobalStats")
+    file.serverName = GetConVarString( "ns_server_name" )
+    file.tags = GetConVarString( "gs-tags" )
 
     AddCallback_GameStateEnter( eGameState.Postmatch, OnGameFinished )
 
@@ -43,6 +47,10 @@ void function OnGameFinished()
 {
     int winningTeam = GetWinningTeam();
 	table data
+	data["serverName"] <- file.serverName
+	if(file.tags != "") {
+		data["tags"] <- file.tags
+	}
     data["map"] <- GetMapName()
     data["gamemode"] <- GameRules_GetGameMode()
 

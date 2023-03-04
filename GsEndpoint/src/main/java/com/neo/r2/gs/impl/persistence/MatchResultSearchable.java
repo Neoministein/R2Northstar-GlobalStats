@@ -16,9 +16,11 @@ public class MatchResultSearchable extends AbstractSearchable implements Searcha
 
     protected Date timestamp = new Date();
 
+    protected String serverName;
     protected String matchId;
     protected String map;
     protected String gamemode;
+    protected String[] tags;
 
     @JsonUnwrapped
     protected MatchResultDto.Player player;
@@ -27,6 +29,8 @@ public class MatchResultSearchable extends AbstractSearchable implements Searcha
         this.matchId = matchResultDto.matchId();
         this.map = matchResultDto.map();
         this.gamemode = matchResultDto.gamemode();
+        this.serverName = matchResultDto.serverName();
+        this.tags = matchResultDto.tags().replaceAll("\\s+","").split(",");
         this.player = player;
     }
 
