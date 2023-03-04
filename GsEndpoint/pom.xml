@@ -153,12 +153,13 @@
             </plugin>
             <plugin>
                 <groupId>com.neo.util</groupId>
-                <artifactId>neoutil-rest-plugin</artifactId>
+                <artifactId>neoutil-maven-plugin</artifactId>
                 <version>${neoutil.version}</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>generate-inboundDto</goal>
+                            <goal>generate-jsonSchemaIndex</goal>
                         </goals>
                     </execution>
                 </executions>
