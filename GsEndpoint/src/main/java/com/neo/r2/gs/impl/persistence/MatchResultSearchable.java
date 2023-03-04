@@ -30,7 +30,9 @@ public class MatchResultSearchable extends AbstractSearchable implements Searcha
         this.map = matchResultDto.map();
         this.gamemode = matchResultDto.gamemode();
         this.serverName = matchResultDto.serverName();
-        this.tags = matchResultDto.tags().replaceAll("\\s+","").split(",");
+        if (tags != null) {
+            this.tags = matchResultDto.tags().replaceAll("\\s+","").split(",");
+        }
         this.player = player;
     }
 
