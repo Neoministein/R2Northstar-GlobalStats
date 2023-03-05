@@ -26,13 +26,11 @@ public class MatchResultSearchable extends AbstractSearchable implements Searcha
     protected MatchResultDto.Player player;
 
     public MatchResultSearchable(MatchResultDto matchResultDto, MatchResultDto.Player player) {
-        this.matchId = matchResultDto.matchId();
+        this.matchId = matchResultDto.matchId().orElse(null);
         this.map = matchResultDto.map();
         this.gamemode = matchResultDto.gamemode();
         this.serverName = matchResultDto.serverName();
-        if (matchResultDto.tags() != null) {
-            this.tags = matchResultDto.tags().replaceAll("\\s+","").split(",");
-        }
+        this.tags = matchResultDto.tags().map(t -> t.replaceAll("\\s+","").split(",")).orElse(null);
         this.player = player;
     }
 
