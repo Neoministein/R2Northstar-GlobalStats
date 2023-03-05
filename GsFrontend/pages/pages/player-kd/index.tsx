@@ -6,7 +6,10 @@ import { PlayerKdBucket } from '../../../demo/service/BackendService';
 const WinRatioPage = () => {
 
     const winRatioBody = (column: PlayerKdBucket) => {
-        return column.kd.toFixed(3) + "%"
+        if(column?.kd) {
+            return column?.kd.toFixed(3) + "%";
+        }
+        return null;
     }
 
     return (

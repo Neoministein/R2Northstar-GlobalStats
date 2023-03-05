@@ -6,7 +6,11 @@ import TopResultTable from '../../../demo/components/TopResultTable';
 const ButtonDemo = () => {
 
     const winRatioBody = (column: WinRatioBucket) => {
-        return column.ratio + "%"
+        if(column?.ratio) {
+            return column.ratio + "%";
+        }
+
+        return null;
     }
 
     return (
