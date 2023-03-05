@@ -5,8 +5,12 @@ import com.neo.r2.gs.impl.persistence.MatchResultSearchable;
 import com.neo.r2.gs.impl.persistence.PlayerUidSearchable;
 import com.neo.r2.gs.impl.rest.dto.inbound.MatchResultDto;
 import com.neo.util.common.impl.MathUtils;
+import com.neo.util.common.impl.StringUtils;
 import com.neo.util.framework.api.persistence.aggregation.*;
+import com.neo.util.framework.api.persistence.criteria.CombinedSearchCriteria;
+import com.neo.util.framework.api.persistence.criteria.ContainsSearchCriteria;
 import com.neo.util.framework.api.persistence.criteria.ExplicitSearchCriteria;
+import com.neo.util.framework.api.persistence.criteria.SearchCriteria;
 import com.neo.util.framework.api.persistence.search.SearchProvider;
 import com.neo.util.framework.api.persistence.search.SearchQuery;
 import com.neo.util.framework.elastic.api.IndexNamingService;
@@ -56,15 +60,12 @@ public class ResultResource {
 
     @GET
     @Path("top/npc-kills")
-    public AggregationResult getNpcKills(@QueryParam("max") @DefaultValue("100") String queryMaxResult) {
-        int maxResult;
-        try {
-            maxResult = MathUtils.clamp(Integer.parseInt(queryMaxResult), 1, 10000) ;
-        } catch (NumberFormatException ex) {
-            maxResult = 100;
-        }
+    public AggregationResult getNpcKills(@QueryParam("max") @DefaultValue("100") String queryMaxResult,
+                                         @QueryParam("tags") String tags) {
+        int maxResult = getMaxResult(queryMaxResult);
 
         SearchQuery searchQuery = new SearchQuery();
+        searchQuery.addFilters(generateCrieteriaFromTags(tags));
         searchQuery.setAggregations(List.of(new TermAggregation("npc-kills","uId", maxResult,new TermAggregation.Order("PGS_NPC_KILLS"), null, List.of(new SimpleFieldAggregation("PGS_NPC_KILLS", "PGS_NPC_KILLS", SimpleFieldAggregation.Type.SUM)))));
 
         return searchProvider.fetch(resultIndexName, searchQuery).getAggregations().get("npc-kills");
@@ -72,15 +73,12 @@ public class ResultResource {
 
     @GET
     @Path("top/player-kills")
-    public AggregationResult getPLayerKills(@QueryParam("max") @DefaultValue("100") String queryMaxResult) {
-        int maxResult;
-        try {
-            maxResult = MathUtils.clamp(Integer.parseInt(queryMaxResult), 1, 10000) ;
-        } catch (NumberFormatException ex) {
-            maxResult = 100;
-        }
+    public AggregationResult getPLayerKills(@QueryParam("max") @DefaultValue("100") String queryMaxResult,
+                                            @QueryParam("tags") String tags) {
+        int maxResult = getMaxResult(queryMaxResult);
 
         SearchQuery searchQuery = new SearchQuery();
+        searchQuery.addFilters(generateCrieteriaFromTags(tags));
         searchQuery.setAggregations(List.of(new TermAggregation("player-kills","uId", maxResult,new TermAggregation.Order("PGS_PILOT_KILLS"), null, List.of(new SimpleFieldAggregation("PGS_PILOT_KILLS", "PGS_PILOT_KILLS", SimpleFieldAggregation.Type.SUM)))));
 
         return searchProvider.fetch(resultIndexName, searchQuery).getAggregations().get("player-kills");
@@ -88,15 +86,12 @@ public class ResultResource {
 
     @GET
     @Path("top/player-kd")
-    public AggregationResult getPLayerKd(@QueryParam("max") @DefaultValue("100") String queryMaxResult) {
-        int maxResult;
-        try {
-            maxResult = MathUtils.clamp(Integer.parseInt(queryMaxResult), 1, 10000) ;
-        } catch (NumberFormatException ex) {
-            maxResult = 100;
-        }
+    public AggregationResult getPLayerKd(@QueryParam("max") @DefaultValue("100") String queryMaxResult,
+                                         @QueryParam("tags") String tags) {
+        int maxResult = getMaxResult(queryMaxResult);
 
         SearchQuery searchQuery = new SearchQuery();
+        searchQuery.addFilters(generateCrieteriaFromTags(tags));
         BucketScriptAggregation bucketScriptAggregation = new BucketScriptAggregation("kd", "params.kills / params.deaths", Map.of("kills", "PGS_PILOT_KILLS", "deaths", "PGS_DEATHS"));
         searchQuery.setAggregations(List.of(new TermAggregation("player-kd","uId", maxResult,new TermAggregation.Order("kd"), null, List.of(new SimpleFieldAggregation("PGS_PILOT_KILLS", "PGS_PILOT_KILLS", SimpleFieldAggregation.Type.SUM), new SimpleFieldAggregation("PGS_DEATHS", "PGS_DEATHS", SimpleFieldAggregation.Type.SUM), bucketScriptAggregation))));
 
@@ -105,16 +100,12 @@ public class ResultResource {
 
     @GET
     @Path("top/win")
-    public AggregationResult getWin(@QueryParam("max") @DefaultValue("100") String queryMaxResult) {
-        int maxResult;
-        try {
-            maxResult = MathUtils.clamp(Integer.parseInt(queryMaxResult), 1, 10000) ;
-        } catch (NumberFormatException ex) {
-            maxResult = 100;
-        }
+    public AggregationResult getWin(@QueryParam("max") @DefaultValue("100") String queryMaxResult,
+                                    @QueryParam("tags") String tags) {
+        int maxResult = getMaxResult(queryMaxResult);
 
         SearchQuery searchQuery = new SearchQuery();
-        searchQuery.setFilters(List.of(new ExplicitSearchCriteria("hasWon",true)));
+        searchQuery.addFilters(new ExplicitSearchCriteria("hasWon",true), generateCrieteriaFromTags(tags));
         searchQuery.setAggregations(List.of(new TermAggregation("win","uId", maxResult, new TermAggregation.Order("win"), null, List.of(new SimpleFieldAggregation("win","matchId", SimpleFieldAggregation.Type.COUNT)))));
 
         return searchProvider.fetch(resultIndexName, searchQuery).getAggregations().get("win");
@@ -122,18 +113,31 @@ public class ResultResource {
 
     @GET
     @Path("top/win-ratio")
-    public AggregationResult getWinRatio(@QueryParam("max") @DefaultValue("100") String queryMaxResult) {
-        int maxResult;
-        try {
-            maxResult = MathUtils.clamp(Integer.parseInt(queryMaxResult), 1, 10000) ;
-        } catch (NumberFormatException ex) {
-            maxResult = 100;
-        }
+    public AggregationResult getWinRatio(@QueryParam("max") @DefaultValue("100") String queryMaxResult,
+                                         @QueryParam("tags") String tags) {
+        int maxResult = getMaxResult(queryMaxResult);
+
 
         SearchQuery searchQuery = new SearchQuery();
+        searchQuery.addFilters(generateCrieteriaFromTags(tags));
         BucketScriptAggregation bucketScriptAggregation = new BucketScriptAggregation("ratio", "params.wins / (params.wins + params.loses) * 100", Map.of("wins", "filters['win']>count", "loses", "filters['lose']>count"));
         searchQuery.setAggregations(List.of(new TermAggregation("win-ratio","uId", maxResult, new TermAggregation.Order("ratio"),null, List.of(new CriteriaAggregation("filters", Map.of("win", new ExplicitSearchCriteria("hasWon",true),"lose", new ExplicitSearchCriteria("hasWon",false)), new SimpleFieldAggregation("count","matchId", SimpleFieldAggregation.Type.COUNT)), bucketScriptAggregation))));
 
         return searchProvider.fetch(resultIndexName, searchQuery).getAggregations().get("win-ratio");
+    }
+
+    protected SearchCriteria generateCrieteriaFromTags(String queryTags) {
+        if (StringUtils.isEmpty(queryTags)) {
+            return new CombinedSearchCriteria();
+        }
+        return new ContainsSearchCriteria("tags",queryTags.split(","));
+    }
+
+    protected int getMaxResult(String queryMaxResult) {
+        try {
+            return MathUtils.clamp(Integer.parseInt(queryMaxResult), 1, 10000) ;
+        } catch (NumberFormatException ex) {
+            return 100;
+        }
     }
 }
