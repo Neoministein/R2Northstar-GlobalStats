@@ -1,42 +1,59 @@
-import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import {Accordion, AccordionTab} from "primereact/accordion"
+import { Card} from "primereact/card"
 import { DataTable } from "primereact/datatable";
 import { Skeleton } from "primereact/skeleton";
 import { VirtualScrollerLazyEvent, VirtualScrollerLoadingTemplateOptions } from "primereact/virtualscroller";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackendService, { PlayerBucket} from "../service/BackendService";
+import InputTextTags from "./InputTextTags";
 
 interface TableProps {
-    getGlobalRanking(): Promise<any>
+    getGlobalRanking(tags: string[]): Promise<any>
     columns: JSX.Element[]
     title: string
 }
 
-export default function TopResultTable<T extends PlayerBucket>({getGlobalRanking, columns, title} : TableProps) { 
+export default function TopResultTable<T extends PlayerBucket>({getGlobalRanking, columns, title} : TableProps) {
+    const tableSteps = 50;
+
     const [globalRanking, setGlobalRanking] = useState<T[]>([]);
 
     const [virtualRanking, setVirtualRanking] = useState<T[]>([]);
+    const [virtualState, setVirtualState] = useState({
+        tags: [] as string[],
+        requireRefresh: true
+    });
     const [lazyLoading, setLazyLoading] = useState<boolean>(false);
+    const [showAdanced, setShowAdanced] = useState<boolean>();
+
+    useEffect(() => {
+        if (virtualState.requireRefresh) {
+            loadRankingLazy({first: 0, last: tableSteps} as VirtualScrollerLazyEvent);
+        }
+    }, [virtualState]);
 
     const loadRankingLazy = async (event: VirtualScrollerLazyEvent) => {
         !lazyLoading && setLazyLoading(true);
 
         const first = event.first as number;
         const last = event.last as number;
-    
+
         let _virtualRanking;
         let _globalRanking;
-        
 
-        if(virtualRanking.length === 0) {
-            _globalRanking = await getGlobalRanking();
+
+        if(virtualState.requireRefresh) {
+            _globalRanking = await getGlobalRanking(virtualState.tags);
 
             setGlobalRanking(_globalRanking);
             _virtualRanking = Array.from({ length: _globalRanking.length});
+
         } else {
             _virtualRanking = [...virtualRanking];
             _globalRanking = globalRanking;
         }
-        
+
 
         const loadedRanking = await Promise.all(_globalRanking.slice(first as number, last as number).map(
             row => BackendService.getPlayerNameFromUid(row.key).then(playerLookUp => {
@@ -46,6 +63,7 @@ export default function TopResultTable<T extends PlayerBucket>({getGlobalRanking
         ));
         Array.prototype.splice.apply(_virtualRanking, [...[first, last as number - (first as number)], ...loadedRanking]);
         setVirtualRanking(_virtualRanking);
+        setVirtualState(object => {return{ tags: object.tags, requireRefresh: false}});
         setLazyLoading(false);
     };
 
@@ -57,17 +75,52 @@ export default function TopResultTable<T extends PlayerBucket>({getGlobalRanking
         );
     };
 
+    const updateValues = (newTags : string[]) => {
+        setVirtualState({ tags: newTags, requireRefresh: true});
+    }
+
     return (
+        /* TODO FIX LAYOUT AT SOME TIME */
         <div className="grid">
             <div className="col-12">
-                <div className="card" style={{height: "calc(100vh - 9.5rem)"}}>
-                    <h5>{title}</h5>
-                    <div style={{height: "100%"}}>
-                    <DataTable value={virtualRanking} scrollable scrollHeight={"flex"} style={{paddingBottom: "20px"}}
-                            virtualScrollerOptions={{ lazy: true, onLazyLoad: loadRankingLazy, itemSize: 46, delay: 0, showLoader: true, loading: lazyLoading, loadingTemplate, step: 50 }}
-                            tableStyle={{ minWidth: '50rem' }} key={"key"}>
+                <div className="card" style={{height: "calc(100vh - 9.5rem)", overflow: "hidden"}}>
+                    <h5 style={{display: "flex" }}>
+                        {title}
+                        <Button 
+                            icon={showAdanced ? 'pi pi-minus' : 'pi pi-plus'} 
+                            label="Advanced"
+                            onClick={() => setShowAdanced(!showAdanced)} 
+                            className="p-button-text" 
+                            style={{ marginLeft: "auto" }}/>
+                    </h5>
+                    
+                    {showAdanced ? 
+                                <Card title="Advanced Settings">
+                                    <InputTextTags lable="Server Tags" onChange={updateValues}/>
+                                </Card>
+                    : null}
+
+                    <div style={{height: "100%", paddingBottom: "30px"}}>
+                        <DataTable 
+                            value={virtualRanking} 
+                            scrollable 
+                            scrollHeight={"flex"} 
+                            /*style={{paddingBottom:  showAdanced ? "175px" : "30px"}}*/
+                            tableStyle={{ minWidth: '10rem' }} key={"key"}
+                            virtualScrollerOptions={{ 
+                                id: "dadada",
+                                lazy: true, 
+                                onLazyLoad: loadRankingLazy, 
+                                itemSize: 46, 
+                                delay: 0, 
+                                showLoader: true, 
+                                loading: lazyLoading, 
+                                loadingTemplate, 
+                                step: tableSteps}}>
+                            
+                                
                                 {columns}
-                    </DataTable>
+                        </DataTable>
                     </div>
                 </div>
             </div>

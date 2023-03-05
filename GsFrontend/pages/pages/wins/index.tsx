@@ -7,7 +7,7 @@ const WinsPage = () => {
     return (
         <TopResultTable 
             title="Top Player Kills" 
-            getGlobalRanking={() => BackendService.getTopWins()}
+            getGlobalRanking={(tags) => BackendService.getTopWins(tags)}
             columns={
                 [<Column header="Player Name" field="playerName"/>,
                 <Column header="Wins" field="win" />]}/> 

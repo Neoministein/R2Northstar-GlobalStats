@@ -15,7 +15,7 @@ const WinRatioPage = () => {
     return (
         <TopResultTable 
             title="Top Player K/D" 
-            getGlobalRanking={() => BackendService.getTopPlayerKd()}
+            getGlobalRanking={(tags) => BackendService.getTopPlayerKd(tags)}
             columns={
                 [<Column header="Player Name" field="playerName" />,
                 <Column header="K/D" body={winRatioBody} />,

@@ -7,7 +7,7 @@ const NpcKillPage = () => {
     return (
         <TopResultTable 
             title="Top Npc Kills" 
-            getGlobalRanking={() => BackendService.getTopNpcKills()}
+            getGlobalRanking={(tags) => BackendService.getTopNpcKills(tags)}
             columns={
                 [<Column field="playerName" header="PlayerName"/>,
                 <Column field="PGS_NPC_KILLS" header="Npc Kills"/>]}/> 

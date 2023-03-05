@@ -7,7 +7,7 @@ const PlayerKillPage = () => {
     return (
         <TopResultTable 
             title="Top Player Kills" 
-            getGlobalRanking={() => BackendService.getTopPlayerKills()}
+            getGlobalRanking={(tags) => BackendService.getTopPlayerKills(tags)}
             columns={
                 [<Column field="playerName" header="PlayerName"/>,
                 <Column field="PGS_PILOT_KILLS" header="Player Kills"/>]}/> 

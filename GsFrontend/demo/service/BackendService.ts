@@ -44,28 +44,28 @@ const BackendService = {
 
     playerCache: new Map<string, CachedPlayerLookup>(),
 
-    getTopPlayerKills() : Promise<PlayerKillBucket[]> {
-        return fetch(AppConfig.apiUrl + "/result/top/player-kills?max=1000").then(response => response.json())
+    getTopPlayerKills(tags : string[] = []) : Promise<PlayerKillBucket[]> {
+        return fetch(AppConfig.apiUrl + "/result/top/player-kills?max=1000" + this.formatTagParam(tags)).then(response => response.json())
         .then(data => data.buckets);
     },
 
-    getTopPlayerKd() : Promise<PlayerKdBucket[]> {
-        return fetch(AppConfig.apiUrl + "/result/top/player-kd?max=1000").then(response => response.json())
+    getTopPlayerKd(tags : string[] = []) : Promise<PlayerKdBucket[]> {
+        return fetch(AppConfig.apiUrl + "/result/top/player-kd?max=1000" + this.formatTagParam(tags)).then(response => response.json())
         .then(data => data.buckets);
     },
 
-    getTopNpcKills() : Promise<NpcKillBucket[]> {
-        return fetch(AppConfig.apiUrl + "/result/top/npc-kills?max=1000").then(response => response.json())
+    getTopNpcKills(tags : string[] = []) : Promise<NpcKillBucket[]> {
+        return fetch(AppConfig.apiUrl + "/result/top/npc-kills?max=1000" + this.formatTagParam(tags)).then(response => response.json())
         .then(data => data.buckets);
     },
 
-    getTopWinRatio() : Promise<WinRatioBucket[]> {
-        return fetch(AppConfig.apiUrl + "/result/top/win-ratio?max=1000").then(response => response.json())
+    getTopWinRatio(tags : string[] = []) : Promise<WinRatioBucket[]> {
+        return fetch(AppConfig.apiUrl + "/result/top/win-ratio?max=1000" + this.formatTagParam(tags)).then(response => response.json())
         .then(data => data.buckets);
     },
 
-    getTopWins() : Promise<WinsBucket[]> {
-        return fetch(AppConfig.apiUrl + "/result/top/win?max=1000").then(response => response.json())
+    getTopWins(tags : string[] = []) : Promise<WinsBucket[]> {
+        return fetch(AppConfig.apiUrl + "/result/top/win?max=1000" + this.formatTagParam(tags)).then(response => response.json())
         .then(data => data.buckets);
     },
 
@@ -85,6 +85,14 @@ const BackendService = {
         }
 
         return Promise.resolve(cachedPlayer);
+    },
+
+    formatTagParam(tags : string[]) : string {
+        if(tags.length === 0) {
+            return "";
+        }
+
+        return "&tags=" + tags.join(",");
     }
 }
 
