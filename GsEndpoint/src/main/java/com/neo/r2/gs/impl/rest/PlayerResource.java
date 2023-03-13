@@ -71,10 +71,4 @@ public class PlayerResource {
 
         return result.getHits().get(0);
     }
-
-    @GET
-    public Response test() {
-        searchProvider.reload();
-        return Response.ok().build();
-    }
 }
