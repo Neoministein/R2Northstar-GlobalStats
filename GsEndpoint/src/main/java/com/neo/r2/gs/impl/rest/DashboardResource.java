@@ -12,7 +12,7 @@ import com.neo.util.framework.api.persistence.search.SearchProvider;
 import com.neo.util.framework.api.persistence.search.SearchQuery;
 import com.neo.util.framework.api.persistence.search.SearchResult;
 import com.neo.util.framework.elastic.api.IndexNamingService;
-import com.neo.util.framework.rest.api.cache.CacheControl;
+import com.neo.util.framework.rest.api.cache.ClientCacheControl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
-@CacheControl(maxAge = 60)
+@ClientCacheControl(maxAge = 60)
 @Path(DashboardResource.RESOURCE_LOCATION)
 @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
 public class DashboardResource {

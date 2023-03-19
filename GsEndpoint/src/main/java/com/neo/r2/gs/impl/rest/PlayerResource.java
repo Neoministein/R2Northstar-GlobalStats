@@ -9,7 +9,7 @@ import com.neo.util.framework.api.persistence.search.SearchProvider;
 import com.neo.util.framework.api.persistence.search.SearchQuery;
 import com.neo.util.framework.api.persistence.search.SearchResult;
 import com.neo.util.framework.elastic.api.IndexNamingService;
-import com.neo.util.framework.rest.api.cache.CacheControl;
+import com.neo.util.framework.rest.api.cache.ClientCacheControl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -39,7 +39,7 @@ public class PlayerResource {
 
     @GET
     @Path("/uid/{uid}")
-    @CacheControl(maxAge = 86400)
+    @ClientCacheControl(maxAge = 86400)
     public JsonNode getPlayerNameByUid(@PathParam("uid") String uid) {
         SearchQuery searchQuery = new SearchQuery();
         searchQuery.setMaxResults(1);
@@ -56,7 +56,7 @@ public class PlayerResource {
 
     @GET
     @Path("name/{name}")
-    @CacheControl(maxAge = 86400)
+    @ClientCacheControl(maxAge = 86400)
     public JsonNode getUidByPlayerName(@PathParam("name") String name) {
         SearchQuery searchQuery = new SearchQuery();
         searchQuery.setMaxResults(1);

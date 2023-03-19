@@ -15,7 +15,7 @@ import com.neo.util.framework.api.persistence.search.SearchProvider;
 import com.neo.util.framework.api.persistence.search.SearchQuery;
 import com.neo.util.framework.elastic.api.IndexNamingService;
 import com.neo.util.framework.elastic.api.aggregation.BucketScriptAggregation;
-import com.neo.util.framework.rest.api.cache.CacheControl;
+import com.neo.util.framework.rest.api.cache.ClientCacheControl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @ApplicationScoped
-@CacheControl(maxAge = 60)
+@ClientCacheControl(maxAge = 60)
 @Path(ResultResource.RESOURCE_LOCATION)
 @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
 public class ResultResource {
