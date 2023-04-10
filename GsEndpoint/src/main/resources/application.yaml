@@ -1,7 +1,13 @@
+r2gs.request-recorder.enabled: ${r2gs.request-recorder.enabled}
+
 elastic:
     nodes:
         - ${org.elastic.node.0}
     prefix: r2gs
     enabled: ${org.elastic.enabled}
+
+caffeine:
+    default:
+        maxSize: 500
 server:
     port: 8100

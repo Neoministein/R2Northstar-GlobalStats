@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.neo.r2.gs.impl.persistence.RequestSearchable;
 import com.neo.util.common.impl.exception.CommonRuntimeException;
 import com.neo.util.common.impl.json.JsonUtil;
+import com.neo.util.framework.api.config.ConfigService;
 import com.neo.util.framework.api.connection.RequestDetails;
 import com.neo.util.framework.api.persistence.search.SearchProvider;
 import com.neo.util.framework.impl.connection.HttpRequestDetails;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.core.MultivaluedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,6 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.security.Principal;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
 
 @Provider
@@ -30,16 +29,25 @@ public class RequestRecorder implements ContainerResponseFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestRecorder.class);
     private static final Logger ACCESS_LOGGER = LoggerFactory.getLogger("Request");
 
-    @Inject
-    jakarta.inject.Provider<RequestDetails> requestDetailsProvider;
+    public static final String ENABLED_CONFIG = "r2gs.request-recorder.enabled";
+
+    protected final boolean enabled;
 
     @Inject
-    SearchProvider searchProvider;
+    protected jakarta.inject.Provider<RequestDetails> requestDetailsProvider;
+
+    @Inject
+    protected SearchProvider searchProvider;
+
+    @Inject
+    public RequestRecorder(ConfigService configService) {
+        enabled = configService.get(ENABLED_CONFIG).asBoolean().orElse(true);
+    }
 
     @Override
     public void filter(ContainerRequestContext containerRequest,
             ContainerResponseContext containerResponse) {
-        if (containerResponse.getStatus() != 404 && !containerResponse.getStatusInfo().getReasonPhrase().equals("Not Found")) {
+        if (enabled && containerResponse.getStatus() != 404 && !containerResponse.getStatusInfo().getReasonPhrase().equals("Not Found")) {
             try {
                 RequestDetails requestDetails = requestDetailsProvider.get();
                 HttpRequestDetails httpRequestDetails = (HttpRequestDetails) requestDetails;

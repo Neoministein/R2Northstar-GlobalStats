@@ -48,6 +48,12 @@
 
         <dependency>
             <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-cache-caffeine</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.neo.util</groupId>
             <artifactId>neoutil-helidon-rest</artifactId>
             <version>${neoutil.version}</version>
         </dependency>

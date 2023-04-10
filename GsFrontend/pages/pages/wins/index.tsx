@@ -1,5 +1,5 @@
 import { Column } from 'primereact/column';
-import BackendService from '../../../demo/service/BackendService';
+import TopService from '../../../demo/service/TopService';
 import TopResultTable from '../../../demo/components/TopResultTable';
 
 const WinsPage = () => {
@@ -7,7 +7,7 @@ const WinsPage = () => {
     return (
         <TopResultTable 
             title="Top Player Kills" 
-            getGlobalRanking={(tags) => BackendService.getTopWins(tags)}
+            getGlobalRanking={(tags) => TopService.getTopWins(tags)}
             columns={
                 [<Column header="Player Name" field="playerName"/>,
                 <Column header="Wins" field="win" />]}/> 

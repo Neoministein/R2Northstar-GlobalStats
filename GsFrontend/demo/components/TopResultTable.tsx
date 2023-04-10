@@ -5,7 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Skeleton } from "primereact/skeleton";
 import { VirtualScrollerLazyEvent, VirtualScrollerLoadingTemplateOptions } from "primereact/virtualscroller";
 import { useEffect, useState } from "react";
-import BackendService, { PlayerBucket} from "../service/BackendService";
+import TopService, { PlayerBucket} from "../service/TopService";
 import InputTextTags from "./InputTextTags";
 
 interface TableProps {
@@ -55,12 +55,11 @@ export default function TopResultTable<T extends PlayerBucket>({getGlobalRanking
         }
 
 
-        const loadedRanking = await Promise.all(_globalRanking.slice(first as number, last as number).map(
-            row => BackendService.getPlayerNameFromUid(row.key).then(playerLookUp => {
-                row.playerName = playerLookUp.playerName;
-                return row;
-            })
-        ));
+        const loadedRanking =  _globalRanking.slice(first as number, last as number);
+        const playerNameObject = await TopService.getPlayerNamesFromUid(loadedRanking.map(row => row.key));
+        loadedRanking.forEach(element => {
+            element.playerName = playerNameObject[element.key]
+        });
         Array.prototype.splice.apply(_virtualRanking, [...[first, last as number - (first as number)], ...loadedRanking]);
         setVirtualRanking(_virtualRanking);
         setVirtualState(object => {return{ tags: object.tags, requireRefresh: false}});

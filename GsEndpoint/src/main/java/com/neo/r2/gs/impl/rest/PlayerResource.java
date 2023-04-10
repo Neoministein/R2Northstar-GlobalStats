@@ -1,24 +1,17 @@
 package com.neo.r2.gs.impl.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.neo.r2.gs.impl.CustomConstants;
-import com.neo.r2.gs.impl.persistence.PlayerUidSearchable;
+import com.neo.r2.gs.impl.rest.dto.inbound.PlayerLookUpSearchDto;
+import com.neo.r2.gs.impl.rest.dto.outbound.PlayerLookUpObject;
+import com.neo.r2.gs.impl.service.PlayerLookUpService;
 import com.neo.util.common.impl.exception.NoContentFoundException;
-import com.neo.util.framework.api.persistence.criteria.ExplicitSearchCriteria;
-import com.neo.util.framework.api.persistence.search.SearchProvider;
-import com.neo.util.framework.api.persistence.search.SearchQuery;
-import com.neo.util.framework.api.persistence.search.SearchResult;
-import com.neo.util.framework.elastic.api.IndexNamingService;
+import com.neo.util.common.impl.json.JsonUtil;
 import com.neo.util.framework.rest.api.cache.ClientCacheControl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-
-import java.util.List;
 
 @ApplicationScoped
 @Path(PlayerResource.RESOURCE_LOCATION)
@@ -27,47 +20,28 @@ public class PlayerResource {
 
     public static final String RESOURCE_LOCATION = CustomConstants.URI_PREFIX + "/player";
 
-    @Inject
-    protected SearchProvider searchProvider;
-
-    protected String playerUid;
+    protected static final int SECONDS_IN_DAY = 86400;
 
     @Inject
-    public void init(IndexNamingService indexNamingService) {
-        playerUid = indexNamingService.getIndexNamePrefixFromClass(PlayerUidSearchable.class, true);
-    }
+    protected PlayerLookUpService playerLookUpService;
 
     @GET
     @Path("/uid/{uid}")
-    @ClientCacheControl(maxAge = 86400)
-    public JsonNode getPlayerNameByUid(@PathParam("uid") String uid) {
-        SearchQuery searchQuery = new SearchQuery();
-        searchQuery.setMaxResults(1);
-        searchQuery.setFields(List.of("playerName", "uId"));
-        searchQuery.setFilters(List.of(new ExplicitSearchCriteria("_id",uid)));
-        SearchResult result = searchProvider.fetch(playerUid,searchQuery);
-
-        if (result.getHits().isEmpty()) {
-            throw new NoContentFoundException(CustomConstants.EX_PLAYER_FOUND, uid);
-        }
-
-        return result.getHits().get(0);
+    @ClientCacheControl(maxAge = SECONDS_IN_DAY)
+    public PlayerLookUpObject getPlayerNameByUid(@PathParam("uid") String uid) {
+        return playerLookUpService.getPlayerNameByUid(uid)
+                .orElseThrow(() -> new NoContentFoundException(CustomConstants.EX_PLAYER_FOUND, uid));
     }
 
-    @GET
-    @Path("name/{name}")
-    @ClientCacheControl(maxAge = 86400)
-    public JsonNode getUidByPlayerName(@PathParam("name") String name) {
-        SearchQuery searchQuery = new SearchQuery();
-        searchQuery.setMaxResults(1);
-        searchQuery.setFields(List.of("playerName", "uId"));
-        searchQuery.setFilters(List.of(new ExplicitSearchCriteria("playerName", name)));
-        SearchResult result = searchProvider.fetch(playerUid,searchQuery);
-
-        if (result.getHits().isEmpty()) {
-            throw new NoContentFoundException(CustomConstants.EX_PLAYER_FOUND, name);
+    @POST
+    @Path("/uid/search")
+    @ClientCacheControl(maxAge = SECONDS_IN_DAY)
+    public ObjectNode searchForPlayerNameByUid(PlayerLookUpSearchDto playerLookUpDto) {
+        ObjectNode result = JsonUtil.emptyObjectNode();
+        for (String player: playerLookUpDto.players()) {
+            result.put(player, playerLookUpService.getPlayerNameByUid(player).map(PlayerLookUpObject::playerName).orElse("UNKNOWN_PLAYER"));
         }
 
-        return result.getHits().get(0);
+        return result;
     }
 }

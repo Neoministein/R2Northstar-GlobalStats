@@ -5,14 +5,16 @@ import com.neo.util.framework.api.persistence.search.IndexPeriod;
 import com.neo.util.framework.api.persistence.search.Searchable;
 import jakarta.enterprise.context.Dependent;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Dependent
 public class PlayerUidSearchable extends AbstractSearchable implements Searchable {
 
     public static final String INDEX_NAME = "player-uid";
+    public static final String U_ID = "uId";
+    public static final String PLAYER_NAME = "playerName";
 
-    protected Date lastUpdate = new Date();
+    protected Instant lastUpdate = Instant.now();
 
     protected String uId;
     protected String playerName;
