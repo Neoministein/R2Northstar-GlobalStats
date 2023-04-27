@@ -3,13 +3,14 @@ package com.neo.r2.gs.impl.persistence;
 import com.neo.util.framework.api.persistence.search.AbstractSearchable;
 import com.neo.util.framework.api.persistence.search.IndexPeriod;
 import com.neo.util.framework.api.persistence.search.Searchable;
-import jakarta.enterprise.context.Dependent;
+import com.neo.util.framework.api.persistence.search.SearchableIndex;
 
-import java.io.Serializable;
 import java.util.Date;
 
-@Dependent
+@SearchableIndex(indexName = RequestSearchable.INDEX_NAME, indexPeriod = IndexPeriod.DAILY)
 public class RequestSearchable extends AbstractSearchable implements Searchable {
+
+    public static final String INDEX_NAME = "log-request";
 
     protected Date timestamp;
     protected String requestId;
@@ -34,15 +35,6 @@ public class RequestSearchable extends AbstractSearchable implements Searchable 
     }
 
     protected RequestSearchable() {}
-    @Override
-    public IndexPeriod getIndexPeriod() {
-        return IndexPeriod.DAILY;
-    }
-
-    @Override
-    public String getIndexName() {
-        return "log-request";
-    }
 
     public Date getTimestamp() {
         return timestamp;

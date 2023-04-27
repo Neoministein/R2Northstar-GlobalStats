@@ -5,11 +5,11 @@ import com.neo.r2.gs.impl.rest.dto.inbound.MatchResultDto;
 import com.neo.util.framework.api.persistence.search.AbstractSearchable;
 import com.neo.util.framework.api.persistence.search.IndexPeriod;
 import com.neo.util.framework.api.persistence.search.Searchable;
-import jakarta.enterprise.context.Dependent;
+import com.neo.util.framework.api.persistence.search.SearchableIndex;
 
 import java.util.Date;
 
-@Dependent
+@SearchableIndex(indexName = MatchResultSearchable.INDEX_NAME, indexPeriod = IndexPeriod.MONTHLY)
 public class MatchResultSearchable extends AbstractSearchable implements Searchable {
 
     public static final String INDEX_NAME = "match-result";
@@ -36,16 +36,6 @@ public class MatchResultSearchable extends AbstractSearchable implements Searcha
 
     //Required by Jackson
     protected MatchResultSearchable() {}
-
-    @Override
-    public String getIndexName() {
-        return INDEX_NAME;
-    }
-
-    @Override
-    public IndexPeriod getIndexPeriod() {
-        return IndexPeriod.MONTHLY;
-    }
 
     public MatchResultSearchable addMatchId(String matchId) {
         this.matchId = matchId;
