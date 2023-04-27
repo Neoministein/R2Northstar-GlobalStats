@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-import {Accordion, AccordionTab} from "primereact/accordion"
 import { Card} from "primereact/card"
 import { DataTable } from "primereact/datatable";
 import { Skeleton } from "primereact/skeleton";
@@ -7,6 +6,7 @@ import { VirtualScrollerLazyEvent, VirtualScrollerLoadingTemplateOptions } from 
 import { useEffect, useState } from "react";
 import TopService, { PlayerBucket} from "../service/TopService";
 import InputTextTags from "./InputTextTags";
+import {Column} from "primereact/column";
 
 interface TableProps {
     getGlobalRanking(tags: string[]): Promise<any>
@@ -85,39 +85,40 @@ export default function TopResultTable<T extends PlayerBucket>({getGlobalRanking
                 <div className="card" style={{height: "calc(100vh - 9.5rem)", overflow: "hidden"}}>
                     <h5 style={{display: "flex" }}>
                         {title}
-                        <Button 
-                            icon={showAdanced ? 'pi pi-minus' : 'pi pi-plus'} 
+                        <Button
+                            icon={showAdanced ? 'pi pi-minus' : 'pi pi-plus'}
                             label="Advanced"
-                            onClick={() => setShowAdanced(!showAdanced)} 
-                            className="p-button-text" 
+                            onClick={() => setShowAdanced(!showAdanced)}
+                            className="p-button-text"
                             style={{ marginLeft: "auto" }}/>
                     </h5>
-                    
-                    {showAdanced ? 
+
+                    {showAdanced ?
                                 <Card title="Advanced Settings">
                                     <InputTextTags lable="Server Tags" onChange={updateValues}/>
                                 </Card>
                     : null}
 
                     <div style={{height: "100%", paddingBottom: "30px"}}>
-                        <DataTable 
-                            value={virtualRanking} 
-                            scrollable 
-                            scrollHeight={"flex"} 
+                        <DataTable
+                            value={virtualRanking}
+                            scrollable
+                            scrollHeight={"flex"}
                             /*style={{paddingBottom:  showAdanced ? "175px" : "30px"}}*/
                             tableStyle={{ minWidth: '10rem' }} key={"key"}
-                            virtualScrollerOptions={{ 
+                            virtualScrollerOptions={{
                                 id: "dadada",
-                                lazy: true, 
-                                onLazyLoad: loadRankingLazy, 
-                                itemSize: 46, 
-                                delay: 0, 
-                                showLoader: true, 
-                                loading: lazyLoading, 
-                                loadingTemplate, 
+                                lazy: true,
+                                onLazyLoad: loadRankingLazy,
+                                itemSize: 46,
+                                delay: 0,
+                                showLoader: true,
+                                loading: lazyLoading,
+                                loadingTemplate,
                                 step: tableSteps}}>
-                            
-                                
+
+
+                                <Column header="Rank" body={(data, props) => (props.rowIndex + 1) + "."}/>
                                 {columns}
                         </DataTable>
                     </div>
