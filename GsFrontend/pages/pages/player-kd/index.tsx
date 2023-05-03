@@ -5,22 +5,22 @@ import { PlayerKdBucket } from '../../../demo/service/TopService';
 
 const WinRatioPage = () => {
 
-    const winRatioBody = (column: PlayerKdBucket) => {
+    const playerKd = (column: PlayerKdBucket) => {
         if(column?.kd) {
-            return column?.kd.toFixed(3) + "%";
+            return column?.kd.toFixed(3);
         }
         return null;
     }
 
     return (
-        <TopResultTable 
-            title="Top Player K/D" 
+        <TopResultTable
+            title="Top Player K/D"
             getGlobalRanking={(tags) => TopService.getTopPlayerKd(tags)}
             columns={
                 [<Column header="Player Name" field="playerName" />,
-                <Column header="K/D" body={winRatioBody} />,
+                <Column header="K/D" body={playerKd} />,
                 <Column header="Kills"  field="PGS_PILOT_KILLS" />,
-                <Column header="Deaths" field="PGS_DEATHS" />]}/> 
+                <Column header="Deaths" field="PGS_DEATHS" />]}/>
     );
 };
 
