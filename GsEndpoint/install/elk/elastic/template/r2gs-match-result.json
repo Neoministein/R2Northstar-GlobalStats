@@ -77,7 +77,7 @@
       },
       "timestamp": {
         "type": "date",
-        "format": "epoch_millis"
+        "format": "strict_date_optional_time_nanos||epoch_millis"
       }
     }
   }
