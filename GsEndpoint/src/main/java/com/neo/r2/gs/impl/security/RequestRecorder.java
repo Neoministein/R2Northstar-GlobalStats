@@ -27,7 +27,6 @@ import java.util.Optional;
 public class RequestRecorder implements ContainerResponseFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestRecorder.class);
-    private static final Logger ACCESS_LOGGER = LoggerFactory.getLogger("Request");
 
     public static final String ENABLED_CONFIG = "r2gs.request-recorder.enabled";
 
@@ -64,9 +63,8 @@ public class RequestRecorder implements ContainerResponseFilter {
                         Optional.ofNullable(containerRequest.getHeaders().get("User-Agent")).map(Object::toString).orElse(""));
                 if (searchProvider.enabled()) {
                     searchResolver(requestSegment);
-                } else {
-                    logResolver(requestSegment);
                 }
+                LOGGER.trace("Status [{}] Context: [{}] Took: [{}]", requestSegment.getStatus(), requestSegment.getContext(), requestSegment.getProcessTime());
             } catch (Exception ex) {
                 LOGGER.warn("Unable to parse request segments [{}]", ex.getMessage());
             }
@@ -94,22 +92,7 @@ public class RequestRecorder implements ContainerResponseFilter {
         try {
             searchProvider.index(requestSegments);
         } catch (Exception ex) {
-            LOGGER.warn("Unable to persist access log searchable [{}]", ex.getMessage());
-        }
-    }
-
-    protected void logResolver(RequestSearchable requestSegments) {
-        try {
-            ACCESS_LOGGER.trace("{}|{}|{}|{}|{}|{}|{}",
-                    requestSegments.getOwner(),
-                    requestSegments.getRemoteAddress(),
-                    requestSegments.getContext(),
-                    requestSegments.getStatus(),
-                    requestSegments.getError(),
-                    requestSegments.getProcessTime(),
-                    requestSegments.getAgent());
-        } catch (Exception ex) {
-            LOGGER.warn("Unable to create access log entry [{}]", ex.getMessage());
+            LOGGER.warn("Unable to persist RequestSearchable [{}]", ex.getMessage());
         }
     }
 }

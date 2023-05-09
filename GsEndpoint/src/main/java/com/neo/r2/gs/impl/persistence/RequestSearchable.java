@@ -40,35 +40,71 @@ public class RequestSearchable extends AbstractSearchable implements Searchable 
         return timestamp;
     }
 
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public String getRequestId() {
         return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public String getOwner() {
         return owner;
     }
 
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     public String getRemoteAddress() {
         return remoteAddress;
+    }
+
+    public void setRemoteAddress(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
     }
 
     public String getContext() {
         return context;
     }
 
+    public void setContext(String context) {
+        this.context = context;
+    }
+
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getError() {
         return error;
     }
 
+    public void setError(String error) {
+        this.error = error;
+    }
+
     public long getProcessTime() {
         return processTime;
     }
 
+    public void setProcessTime(long processTime) {
+        this.processTime = processTime;
+    }
+
     public String getAgent() {
         return agent;
+    }
+
+    public void setAgent(String agent) {
+        this.agent = agent;
     }
 }
