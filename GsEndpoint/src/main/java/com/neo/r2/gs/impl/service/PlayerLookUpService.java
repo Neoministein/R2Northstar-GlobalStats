@@ -52,8 +52,6 @@ public class PlayerLookUpService {
         return Optional.of(result.getHits().get(0));
     }
 
-    @CacheKeyParameterPositions(0)
-    @CachePut(valueParameterPosition = 1, cacheName = PLAYER_LOOK_UP_CACHE)
     public void updatePlayerLookUp(String uid, String playerName) {
         LOGGER.debug("Updating player PlayerLookUp uid [{}], playerName [{}]", uid, playerName);
         searchProvider.update(new PlayerUidSearchable(uid, playerName), true);
