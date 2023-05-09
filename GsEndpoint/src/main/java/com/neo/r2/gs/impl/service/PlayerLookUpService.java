@@ -2,8 +2,6 @@ package com.neo.r2.gs.impl.service;
 
 import com.neo.r2.gs.impl.persistence.PlayerUidSearchable;
 import com.neo.r2.gs.impl.rest.dto.outbound.PlayerLookUpObject;
-import com.neo.util.framework.api.cache.spi.CacheKeyParameterPositions;
-import com.neo.util.framework.api.cache.spi.CachePut;
 import com.neo.util.framework.api.cache.spi.CacheResult;
 import com.neo.util.framework.api.persistence.criteria.ExplicitSearchCriteria;
 import com.neo.util.framework.api.persistence.search.SearchProvider;
