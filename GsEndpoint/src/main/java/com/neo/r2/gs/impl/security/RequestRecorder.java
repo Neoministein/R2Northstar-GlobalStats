@@ -9,14 +9,13 @@ import com.neo.util.framework.api.connection.RequestDetails;
 import com.neo.util.framework.api.persistence.search.SearchProvider;
 import com.neo.util.framework.impl.connection.HttpRequestDetails;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.Principal;
 import java.util.Date;
@@ -59,7 +58,7 @@ public class RequestRecorder implements ContainerResponseFilter {
                         requestDetails.getRequestContext().toString(),
                         Integer.toString(containerResponse.getStatus()),
                         getErrorCodeIfPresent(containerResponse),
-                        System.currentTimeMillis() - requestDetails.getRequestStartDate().getTime(),
+                        System.currentTimeMillis() - requestDetails.getRequestStartDate().toEpochMilli(),
                         Optional.ofNullable(containerRequest.getHeaders().get("User-Agent")).map(Object::toString).orElse(""));
                 if (searchProvider.enabled()) {
                     searchResolver(requestSegment);
