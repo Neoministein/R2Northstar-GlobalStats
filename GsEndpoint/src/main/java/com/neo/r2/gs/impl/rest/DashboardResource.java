@@ -21,7 +21,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 @ApplicationScoped
@@ -76,7 +76,7 @@ public class DashboardResource {
 
     public List<SearchCriteria> parseSinceToCriteria(String since) {
         try {
-            return List.of(new DateSearchCriteria("lastUpdate", new Date(Long.parseLong(since)), null));
+            return List.of(new DateSearchCriteria("lastUpdate", Instant.ofEpochMilli(Long.parseLong(since)), null));
         } catch (NumberFormatException ex) {
             return List.of();
         }
