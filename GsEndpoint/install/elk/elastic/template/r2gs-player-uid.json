@@ -20,7 +20,7 @@
       },
       "lastUpdate": {
         "type": "date",
-        "format": "strict_date_optional_time_nanos||epoch_millis"
+        "format": "epoch_millis"
       }
     }
   }
