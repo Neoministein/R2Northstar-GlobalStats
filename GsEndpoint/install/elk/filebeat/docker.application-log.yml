@@ -6,7 +6,7 @@ filebeat.inputs:
     enabled: true
     paths:
       - './r2-gs-endpoint/application.log'
-    index: "r2gs-log-application-%{+yyyy.MM.dd}"
+    index: "r2gs-log-application-%{+yyyy.MM.ww.DDD}-v1"
     processors:
       #2022-05-29 22:17:29|INFO |ApplicationStartUp:79|-|Application ready post event took: 0 ms
       - dissect:
@@ -29,7 +29,7 @@ setup.dashboards:
 # ================================== Outputs ===================================
 
 output.elasticsearch:
-  hosts: ["r2-gs-es01:9200"]
+  hosts: ["192.168.1.126:9200"]
   allow_older_versions: true
 
 
