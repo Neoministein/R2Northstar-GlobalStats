@@ -8,7 +8,8 @@
   },
   "settings": {
     "number_of_shards": "1",
-    "auto_expand_replicas": "0-1"
+    "auto_expand_replicas": "0-1",
+    "index.default_pipeline": "r2gs-extract-bracket-values.json"
   },
   "mappings" : {
     "properties" : {
@@ -30,11 +31,45 @@
           }
         }
       },
-      "requestId" : {
-        "type" : "keyword"
+      "values": {
+        "properties": {
+          "0": {
+            "type": "keyword"
+          },
+          "1": {
+            "type": "keyword"
+          },
+          "2": {
+            "type": "keyword"
+          },
+          "3": {
+            "type": "keyword"
+          },
+          "4": {
+            "type": "keyword"
+          },
+          "5": {
+            "type": "keyword"
+          },
+          "6": {
+            "type": "keyword"
+          },
+          "7": {
+            "type": "keyword"
+          },
+          "8": {
+            "type": "keyword"
+          },
+          "9": {
+            "type": "keyword"
+          }
+        }
       },
-      "timestamp" : {
-        "type" : "date",
+      "requestId": {
+        "type": "keyword"
+      },
+      "timestamp": {
+        "type": "date",
         "format": "yyyy-MM-dd HH:mm:ss"
       }
     }
