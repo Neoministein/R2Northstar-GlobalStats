@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.1</version>
     </parent>
 
     <groupId>com.neo.r2</groupId>
@@ -21,7 +21,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <org.jboss.jandex.version>2.1.1.Final</org.jboss.jandex.version>
-        <helidon.version>3.2.0</helidon.version>
+        <helidon.version>3.2.1</helidon.version>
         <neoutil.version>1.0.0</neoutil.version>
         <mockito.core.version>4.8.0</mockito.core.version>
     </properties>
@@ -76,6 +76,12 @@
         <dependency>
             <groupId>io.helidon.microprofile.bundles</groupId>
             <artifactId>helidon-microprofile-core</artifactId>
+            <version>${helidon.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.helidon.microprofile.scheduling</groupId>
+            <artifactId>helidon-microprofile-scheduling</artifactId>
             <version>${helidon.version}</version>
         </dependency>
 
