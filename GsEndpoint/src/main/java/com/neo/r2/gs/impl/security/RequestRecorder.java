@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.Principal;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 
 @Provider
@@ -51,7 +51,7 @@ public class RequestRecorder implements ContainerResponseFilter {
                 HttpRequestDetails httpRequestDetails = (HttpRequestDetails) requestDetails;
 
                 RequestSearchable requestSegment = new RequestSearchable(
-                        new Date(),
+                        Instant.now(),
                         requestDetails.getRequestId(),
                         httpRequestDetails.getUser().map(Principal::getName).orElse(""),
                         httpRequestDetails.getRemoteAddress(),

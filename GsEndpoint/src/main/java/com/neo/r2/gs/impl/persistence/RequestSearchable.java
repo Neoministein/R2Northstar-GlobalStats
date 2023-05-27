@@ -5,14 +5,14 @@ import com.neo.util.framework.api.persistence.search.IndexPeriod;
 import com.neo.util.framework.api.persistence.search.Searchable;
 import com.neo.util.framework.api.persistence.search.SearchableIndex;
 
-import java.util.Date;
+import java.time.Instant;
 
 @SearchableIndex(indexName = RequestSearchable.INDEX_NAME, indexPeriod = IndexPeriod.DAILY)
 public class RequestSearchable extends AbstractSearchable implements Searchable {
 
     public static final String INDEX_NAME = "log-request";
 
-    protected Date timestamp;
+    protected Instant timestamp;
     protected String requestId;
     protected String owner;
     protected String remoteAddress;
@@ -22,7 +22,7 @@ public class RequestSearchable extends AbstractSearchable implements Searchable 
     protected long processTime;
     protected String agent;
 
-    public RequestSearchable(Date timestamp, String requestId, String owner, String remoteAddress, String context, String status, String error, long processTime, String agent) {
+    public RequestSearchable(Instant timestamp, String requestId, String owner, String remoteAddress, String context, String status, String error, long processTime, String agent) {
         this.timestamp = timestamp;
         this.requestId = requestId;
         this.owner = owner;
@@ -36,11 +36,11 @@ public class RequestSearchable extends AbstractSearchable implements Searchable 
 
     protected RequestSearchable() {}
 
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

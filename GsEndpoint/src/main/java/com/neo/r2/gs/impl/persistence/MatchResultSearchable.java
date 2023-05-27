@@ -7,14 +7,14 @@ import com.neo.util.framework.api.persistence.search.IndexPeriod;
 import com.neo.util.framework.api.persistence.search.Searchable;
 import com.neo.util.framework.api.persistence.search.SearchableIndex;
 
-import java.util.Date;
+import java.time.Instant;
 
 @SearchableIndex(indexName = MatchResultSearchable.INDEX_NAME, indexPeriod = IndexPeriod.MONTHLY)
 public class MatchResultSearchable extends AbstractSearchable implements Searchable {
 
     public static final String INDEX_NAME = "match-result";
 
-    protected Date timestamp = new Date();
+    protected Instant timestamp = Instant.now();
 
     protected String serverName;
     protected String matchId;
