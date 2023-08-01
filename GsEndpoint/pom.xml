@@ -64,6 +64,12 @@
             <version>${neoutil.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.neo.util</groupId>
+            <artifactId>neoutil-jobrunr-scheduler</artifactId>
+            <version>${neoutil.version}</version>
+        </dependency>
+
         <!-- Bean Discovery -->
         <dependency>
             <groupId>org.jboss</groupId>
@@ -76,12 +82,6 @@
         <dependency>
             <groupId>io.helidon.microprofile.bundles</groupId>
             <artifactId>helidon-microprofile-core</artifactId>
-            <version>${helidon.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.helidon.microprofile.scheduling</groupId>
-            <artifactId>helidon-microprofile-scheduling</artifactId>
             <version>${helidon.version}</version>
         </dependency>
 
